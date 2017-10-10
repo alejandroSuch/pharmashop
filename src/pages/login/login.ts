@@ -1,8 +1,13 @@
-import { config } from './../../app/firebase.config';
-import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
-import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase/app';
+import {Component} from "@angular/core";
+import {AlertController, Loading, LoadingController} from "ionic-angular";
+import {Store} from "@ngrx/store";
+
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/filter";
+import {Subscription} from "rxjs/Subscription";
+import {LoginAction} from "./login.actions";
+import {LoginPageState} from "./login.reducers";
+import {LoginError} from "./LoginError";
 
 /**
  * Generated class for the LoginPage page.
@@ -11,64 +16,74 @@ import * as firebase from 'firebase/app';
  * Ionic pages and navigation.
  */
 
- const ErrorCodes = {
-   USER_NOT_FOUND: 'auth/user-not-found',
-   INVALID_PASSWORD: 'auth/wrong-password'
- };
+const ErrorCodes = {
+  USER_NOT_FOUND: 'auth/user-not-found',
+  INVALID_PASSWORD: 'auth/wrong-password'
+};
 
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
 })
 export class LoginPage {
+  private loading: Loading = null;
+  private loadingSubscription: Subscription = null;
 
-  constructor(
-    private afAuth:AngularFireAuth,
-    private alert:AlertController
-  ) {
+  private alert;
+  private alertSubscription: Subscription;
+
+  constructor(private store: Store<any>,
+              private alertCtrl: AlertController,
+              private loadingCtrl: LoadingController) {
+
+  }
+
+  private initializeErrorSubscription(loginPageState: Store<LoginPageState>) {
+    this.alertSubscription = loginPageState
+      .select('error')
+      .map((error: LoginError) => {
+        if (!error) {
+          return;
+        }
+
+        this.alertCtrl
+          .create({
+            title: 'Error',
+            subTitle: error.code,
+            message: error.name,
+            buttons: ['Aceptar']
+          })
+          .present();
+      }).subscribe()
+  }
+
+  private initializeLoadingSubscription(store: Store<LoginPageState>) {
+    this.loadingSubscription = store.select('loading')
+      .map(showLoading => {
+        if (showLoading && !this.loading) {
+          this.loading = this.loadingCtrl.create({content: 'Iniciando sesión...'});
+          this.loading.present();
+        } else if (this.loading) {
+          this.loading.dismiss();
+          this.loading = null;
+        }
+      })
+      .subscribe();
   }
 
   login(email: string, password: string) {
-    firebase.auth()
-      .signInWithEmailAndPassword(email, password)
-      .catch((err:any) => {
-        if(err.code === ErrorCodes.USER_NOT_FOUND) {
-          this.askForRegistration(email)
-            .then(() => this.register(email, password));
-        } else {
-          console.error('Error logging in', err);
-        }
-      });
-  }
-
-  private askForRegistration(email: string):Promise<any> {
-    return new Promise((resolve, reject) => {
-      const confirm = this.alert.create({
-        title: 'Usuario no encontrado',
-        message: `La dirección de correo <b>${email}</b> no se corresponde con ningún usuario registrado. ¿Deseas crear una cuenta?`,
-        buttons: [
-          { text: 'No', role: 'cancel', handler: () => reject() },
-          { text: 'Sí', handler: () => resolve() }
-        ]
-      });
-      confirm.present();
-    });
-  }
-
-  private register (email: string, password: string) {
-    firebase.auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((user:any) => {
-        console.log('registered', user);
-      })
-      .catch((err:any) => {
-        console.error(err);
-      });
-    console.log('logging in', email, password);
+    this.store.dispatch(new LoginAction(email, password));
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+    const loginPageState: Store<LoginPageState> = this.store.select(appState => appState.loginPage);
+    this.initializeLoadingSubscription(loginPageState);
+    this.initializeErrorSubscription(loginPageState);
+  }
+
+  ionViewDidLeave() {
+    this.alertSubscription.unsubscribe();
+    this.loadingSubscription.unsubscribe();
   }
 
 }

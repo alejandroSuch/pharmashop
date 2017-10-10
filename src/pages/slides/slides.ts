@@ -1,6 +1,6 @@
-import { LoginPage } from './../login/login';
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import {LoginPage} from "./../login/login";
+import {Component} from "@angular/core";
+import {NavController, NavParams} from "ionic-angular";
 
 /**
  * Generated class for the SlidesPage page.
@@ -15,18 +15,11 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class SlidesPage {
 
-  constructor(
-    public navCtrl: NavController, 
-    public navParams: NavParams
-  ) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams) {
   }
 
   goToLogin() {
     this.navCtrl.setRoot(LoginPage);
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SlidesPage');
-  }
-
 }
