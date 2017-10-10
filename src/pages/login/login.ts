@@ -41,11 +41,8 @@ export class LoginPage {
   private initializeErrorSubscription(loginPageState: Store<LoginPageState>) {
     this.alertSubscription = loginPageState
       .select('error')
+      .filter(it => it !== null)
       .map((error: LoginError) => {
-        if (!error) {
-          return;
-        }
-
         this.alertCtrl
           .create({
             title: 'Error',
