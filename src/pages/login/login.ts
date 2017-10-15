@@ -1,13 +1,18 @@
 import {Component} from "@angular/core";
-import {AlertController, Loading, LoadingController} from "ionic-angular";
+import {AlertController, Loading, LoadingController, NavController} from "ionic-angular";
 import {Store} from "@ngrx/store";
 
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/filter";
 import {Subscription} from "rxjs/Subscription";
-import {LoginAction} from "./login.actions";
-import {LoginPageState} from "./login.reducers";
-import {LoginError} from "./LoginError";
+import {LoginError} from "../../domain/login/LoginError";
+import {Error} from "../../domain/shared/Error";
+import {UserNotFoundError} from "../../domain/login/UserNotFoundError";
+import {LoginCredentials} from "../../domain/login/LoginCredentials";
+import {LoginAction} from "../../state-management/login/LoginAction";
+import {RegisterPage} from "../register/register";
+import {ClearErrorAction} from "../../state-management/login/ClearErrorAction";
+import {LoginState} from "../../state-management/login/LoginState";
 
 /**
  * Generated class for the LoginPage page.
@@ -15,11 +20,6 @@ import {LoginError} from "./LoginError";
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
-
-const ErrorCodes = {
-  USER_NOT_FOUND: 'auth/user-not-found',
-  INVALID_PASSWORD: 'auth/wrong-password'
-};
 
 @Component({
   selector: 'page-login',
@@ -32,30 +32,35 @@ export class LoginPage {
   private alert;
   private alertSubscription: Subscription;
 
-  constructor(private store: Store<any>,
+  private store: Store<LoginState>;
+
+  constructor(private appStore: Store<any>,
               private alertCtrl: AlertController,
-              private loadingCtrl: LoadingController) {
-
+              private loadingCtrl: LoadingController,
+              private navCtrl: NavController) {
+    this.store = this.appStore.select(state => <LoginState>state.login);
   }
 
-  private initializeErrorSubscription(loginPageState: Store<LoginPageState>) {
-    this.alertSubscription = loginPageState
-      .select('error')
-      .filter(it => it !== null)
-      .map((error: LoginError) => {
-        this.alertCtrl
-          .create({
-            title: 'Error',
-            subTitle: error.code,
-            message: error.name,
-            buttons: ['Aceptar']
-          })
-          .present();
-      }).subscribe()
+  login(email: string, password: string) {
+    this.store.dispatch(new LoginAction(email, password));
   }
 
-  private initializeLoadingSubscription(store: Store<LoginPageState>) {
-    this.loadingSubscription = store.select('loading')
+  ionViewDidEnter() {
+    console.log('store', this.store);
+    this.store.subscribe(
+      (value) => console.log('store value is', value)
+    );
+    this.initializeLoadingSubscription(this.store);
+    this.initializeErrorSubscription(this.store);
+  }
+
+  ionViewWillLeave() {
+    this.alertSubscription.unsubscribe();
+    this.loadingSubscription.unsubscribe();
+  }
+
+  private initializeLoadingSubscription(store: Store<LoginState>) {
+    this.loadingSubscription = store.select(state => state.loading)
       .map(showLoading => {
         if (showLoading && !this.loading) {
           this.loading = this.loadingCtrl.create({content: 'Iniciando sesión...'});
@@ -68,19 +73,57 @@ export class LoginPage {
       .subscribe();
   }
 
-  login(email: string, password: string) {
-    this.store.dispatch(new LoginAction(email, password));
+  private initializeErrorSubscription(loginPageState: Store<LoginState>) {
+    this.alertSubscription = loginPageState
+      .select(state => state.error)
+      .filter(it => it !== null)
+      .map((error: Error) => this.onError(error))
+      .subscribe()
   }
 
-  ionViewDidLoad() {
-    const loginPageState: Store<LoginPageState> = this.store.select(appState => appState.loginPage);
-    this.initializeLoadingSubscription(loginPageState);
-    this.initializeErrorSubscription(loginPageState);
+  private onError(error: Error) {
+    if (error instanceof LoginError) {
+      this.onGenericError(error);
+    }
+
+    if (error instanceof UserNotFoundError) {
+      this.onUserNotFound(error.credentials);
+    }
+
+    this.store.dispatch(new ClearErrorAction());
   }
 
-  ionViewDidLeave() {
-    this.alertSubscription.unsubscribe();
-    this.loadingSubscription.unsubscribe();
+  private onGenericError(error: LoginError) {
+    this.alertCtrl
+      .create({
+        title: 'Error',
+        subTitle: error.code,
+        message: error.name,
+        buttons: ['Aceptar']
+      })
+      .present();
   }
 
+  private onUserNotFound(credentials: LoginCredentials) {
+    this.alertCtrl
+      .create({
+        title: 'Usuario no encontrado',
+        message: `El usuario <b>${credentials.email}</b> no existe. ¿Deseas registrarte?`,
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel'
+          },
+          {
+            text: 'Aceptar',
+            handler: () => {
+              // this.store.dispatch(new RegisterNewUserAction(credentials));
+              this.navCtrl.push(RegisterPage, {email: credentials.email});
+            }
+          }
+        ]
+      })
+      .present();
+
+  }
 }

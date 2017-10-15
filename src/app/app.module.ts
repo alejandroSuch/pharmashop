@@ -1,4 +1,3 @@
-import {LoginPage} from "./../pages/login/login";
 import {SlidesPage} from "./../pages/slides/slides";
 import {BrowserModule} from "@angular/platform-browser";
 import {ErrorHandler, NgModule} from "@angular/core";
@@ -8,35 +7,38 @@ import {StatusBar} from "@ionic-native/status-bar";
 import {AngularFireModule} from "angularfire2";
 import {AngularFireDatabaseModule} from "angularfire2/database";
 import {AngularFireAuthModule} from "angularfire2/auth";
+import {StoreModule} from "@ngrx/store";
 
 import {MyApp} from "./app.component";
 
 import {config} from "./firebase.config";
-import {StoreModule} from "@ngrx/store";
-import {loginPageReducers} from "../pages/login/login.reducers";
+import {RegisterPage} from "../pages/register/register";
+import {LoginPageModule} from "../pages/login/login.module";
 import {EffectsModule} from "@ngrx/effects";
-import {LoginEffects} from "../pages/login/login.effects";
+import {ApplicationContextModule} from "./context/ApplicationContextModule";
 
 @NgModule({
   declarations: [
     MyApp,
     SlidesPage,
-    LoginPage
+    RegisterPage
   ],
   imports: [
-    EffectsModule.forRoot([LoginEffects]),
-    StoreModule.forRoot({loginPage: loginPageReducers}),
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    ApplicationContextModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
     AngularFireModule.initializeApp(config),
     AngularFireDatabaseModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    LoginPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     SlidesPage,
-    LoginPage
+    RegisterPage
   ],
   providers: [
     StatusBar,
