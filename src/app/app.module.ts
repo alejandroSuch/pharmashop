@@ -25,7 +25,13 @@ import {ApplicationContextModule} from "./context/ApplicationContextModule";
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      platforms: {
+        ios: {
+          backButtonText: 'Atrás'
+        }
+      }
+    }),
     ApplicationContextModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
