@@ -1,21 +1,21 @@
-import {SlidesPage} from "./../pages/slides/slides";
-import {BrowserModule} from "@angular/platform-browser";
-import {ErrorHandler, NgModule} from "@angular/core";
-import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
-import {SplashScreen} from "@ionic-native/splash-screen";
-import {StatusBar} from "@ionic-native/status-bar";
-import {AngularFireModule} from "angularfire2";
-import {AngularFireDatabaseModule} from "angularfire2/database";
-import {AngularFireAuthModule} from "angularfire2/auth";
-import {StoreModule} from "@ngrx/store";
+import { ErrorHandler, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { LoginPageModule } from '../pages/login/login.module';
+import { RegisterPage } from '../pages/register/register';
+import { SlidesPage } from './../pages/slides/slides';
 
-import {MyApp} from "./app.component";
+import { MyApp } from './app.component';
+import { ApplicationContextModule } from './context/ApplicationContextModule';
 
-import {config} from "./firebase.config";
-import {RegisterPage} from "../pages/register/register";
-import {LoginPageModule} from "../pages/login/login.module";
-import {EffectsModule} from "@ngrx/effects";
-import {ApplicationContextModule} from "./context/ApplicationContextModule";
+import { config } from './firebase.config';
 
 @NgModule({
   declarations: [

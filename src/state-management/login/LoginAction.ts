@@ -1,6 +1,6 @@
-import {Action} from "@ngrx/store";
-import {LOGIN} from "./login.actions.constants";
-import {LoginCredentials} from "../../domain/login/LoginCredentials";
+import { Action } from '@ngrx/store';
+import { LoginCredentials } from '../../domain/login/LoginCredentials';
+import { LOGIN } from './login.actions.constants';
 
 export class LoginAction implements Action {
   readonly type: string = LOGIN;

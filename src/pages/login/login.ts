@@ -1,18 +1,18 @@
-import {Component} from "@angular/core";
-import {AlertController, Loading, LoadingController, NavController} from "ionic-angular";
-import {Store} from "@ngrx/store";
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AlertController, Loading, LoadingController, NavController } from 'ionic-angular';
+import 'rxjs/add/operator/filter';
 
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/filter";
-import {Subscription} from "rxjs/Subscription";
-import {LoginError} from "../../domain/login/LoginError";
-import {Error} from "../../domain/shared/Error";
-import {UserNotFoundError} from "../../domain/login/UserNotFoundError";
-import {LoginCredentials} from "../../domain/login/LoginCredentials";
-import {LoginAction} from "../../state-management/login/LoginAction";
-import {RegisterPage} from "../register/register";
-import {ClearErrorAction} from "../../state-management/login/ClearErrorAction";
-import {LoginState} from "../../state-management/login/LoginState";
+import 'rxjs/add/operator/map';
+import { Subscription } from 'rxjs/Subscription';
+import { LoginCredentials } from '../../domain/login/LoginCredentials';
+import { LoginError } from '../../domain/login/LoginError';
+import { UserNotFoundError } from '../../domain/login/UserNotFoundError';
+import { Error } from '../../domain/shared/Error';
+import { ClearErrorAction } from '../../state-management/login/ClearErrorAction';
+import { LoginAction } from '../../state-management/login/LoginAction';
+import { LoginState } from '../../state-management/login/LoginState';
+import { RegisterPage } from '../register/register';
 
 /**
  * Generated class for the LoginPage page.
@@ -23,7 +23,7 @@ import {LoginState} from "../../state-management/login/LoginState";
 
 @Component({
   selector: 'page-login',
-  templateUrl: 'login.html',
+  templateUrl: 'login.html'
 })
 export class LoginPage {
   private loading: Loading = null;
@@ -45,6 +45,10 @@ export class LoginPage {
     this.store.dispatch(new LoginAction(email, password));
   }
 
+  register() {
+    this.navCtrl.push(RegisterPage, {email: ''});
+  }
+
   ionViewDidEnter() {
     console.log('store', this.store);
     this.store.subscribe(
@@ -61,16 +65,16 @@ export class LoginPage {
 
   private initializeLoadingSubscription(store: Store<LoginState>) {
     this.loadingSubscription = store.select(state => state.loading)
-      .map(showLoading => {
-        if (showLoading && !this.loading) {
-          this.loading = this.loadingCtrl.create({content: 'Iniciando sesión...'});
-          this.loading.present();
-        } else if (this.loading) {
-          this.loading.dismiss();
-          this.loading = null;
-        }
-      })
-      .subscribe();
+                                    .map(showLoading => {
+                                      if (showLoading && !this.loading) {
+                                        this.loading = this.loadingCtrl.create({content: 'Iniciando sesión...'});
+                                        this.loading.present();
+                                      } else if (this.loading) {
+                                        this.loading.dismiss();
+                                        this.loading = null;
+                                      }
+                                    })
+                                    .subscribe();
   }
 
   private initializeErrorSubscription(loginPageState: Store<LoginState>) {
@@ -95,35 +99,35 @@ export class LoginPage {
 
   private onGenericError(error: LoginError) {
     this.alertCtrl
-      .create({
-        title: 'Error',
-        subTitle: error.code,
-        message: error.name,
-        buttons: ['Aceptar']
-      })
-      .present();
+        .create({
+          title: 'Error',
+          subTitle: error.code,
+          message: error.name,
+          buttons: ['Aceptar']
+        })
+        .present();
   }
 
   private onUserNotFound(credentials: LoginCredentials) {
     this.alertCtrl
-      .create({
-        title: 'Usuario no encontrado',
-        message: `El usuario <b>${credentials.email}</b> no existe. ¿Deseas registrarte?`,
-        buttons: [
-          {
-            text: 'Cancelar',
-            role: 'cancel'
-          },
-          {
-            text: 'Aceptar',
-            handler: () => {
-              // this.store.dispatch(new RegisterNewUserAction(credentials));
-              this.navCtrl.push(RegisterPage, {email: credentials.email});
+        .create({
+          title: 'Usuario no encontrado',
+          message: `El usuario <b>${credentials.email}</b> no existe. ¿Deseas registrarte?`,
+          buttons: [
+            {
+              text: 'Cancelar',
+              role: 'cancel'
+            },
+            {
+              text: 'Aceptar',
+              handler: () => {
+                // this.store.dispatch(new RegisterNewUserAction(credentials));
+                this.navCtrl.push(RegisterPage, {email: credentials.email});
+              }
             }
-          }
-        ]
-      })
-      .present();
+          ]
+        })
+        .present();
 
   }
 }

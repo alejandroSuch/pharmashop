@@ -1,17 +1,10 @@
-import {LoginPage} from "./../login/login";
-import {Component} from "@angular/core";
-import {NavController, NavParams} from "ionic-angular";
-
-/**
- * Generated class for the SlidesPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { Component } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
+import { LoginPage } from './../login/login';
 
 @Component({
   selector: 'page-slides',
-  templateUrl: 'slides.html',
+  templateUrl: 'slides.html'
 })
 export class SlidesPage {
 

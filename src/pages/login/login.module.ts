@@ -1,7 +1,7 @@
-import {NgModule} from "@angular/core";
-import {IonicPageModule} from "ionic-angular";
-import {LoginPage} from "./login";
-import {LoginStateManagementModule} from "../../state-management/login/LoginStateManagementModule";
+import { NgModule } from '@angular/core';
+import { IonicPageModule } from 'ionic-angular';
+import { LoginStateManagementModule } from '../../state-management/login/LoginStateManagementModule';
+import { LoginPage } from './login';
 
 @NgModule({
   declarations: [
@@ -10,7 +10,7 @@ import {LoginStateManagementModule} from "../../state-management/login/LoginStat
   imports: [
     IonicPageModule.forChild(LoginPage),
     LoginStateManagementModule
-  ],
+  ]
 })
 export class LoginPageModule {
 }

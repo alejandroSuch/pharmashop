@@ -1,6 +1,6 @@
-import {LoginCredentials} from "../LoginCredentials";
-import {Observable} from "rxjs/Observable";
-import {LoginService} from "../LoginService";
+import { Observable } from 'rxjs/Observable';
+import { LoginCredentials } from '../LoginCredentials';
+import { LoginService } from '../LoginService';
 
 export class Login {
   constructor(private loginService: LoginService) {
@@ -8,6 +8,6 @@ export class Login {
 
   public execute(credentials: LoginCredentials): Observable<any> {
     return this.loginService
-      .login(credentials);
+               .login(credentials);
   }
 }
