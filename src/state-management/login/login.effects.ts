@@ -11,6 +11,7 @@ import { LoginService } from '../../domain/login/LoginService';
 import { Action } from './login.actions';
 
 import { LOGIN } from './login.actions.constants';
+import { LoginAction } from './LoginAction';
 import { LoginErrorAction } from './LoginErrorAction';
 
 @Injectable()
@@ -18,7 +19,7 @@ export class LoginEffects {
   @Effect()
   login$: Observable<Action> = this.action$
                                    .ofType(LOGIN)
-                                   .map(action => action.payload)
+                                   .map((action: LoginAction) => action.payload)
                                    .mergeMap(
                                      credentials =>
                                        this.loginService
