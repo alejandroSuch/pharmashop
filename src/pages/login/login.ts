@@ -50,10 +50,6 @@ export class LoginPage {
   }
 
   ionViewDidEnter() {
-    console.log('store', this.store);
-    this.store.subscribe(
-      (value) => console.log('store value is', value)
-    );
     this.initializeLoadingSubscription(this.store);
     this.initializeErrorSubscription(this.store);
   }
