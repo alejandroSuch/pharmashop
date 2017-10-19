@@ -13,7 +13,7 @@ import { RegisterPage } from '../pages/register/register';
 import { SlidesPage } from './../pages/slides/slides';
 
 import { MyApp } from './app.component';
-import { ApplicationContextModule } from './context/ApplicationContextModule';
+import { ApplicationContextModule } from './context/FirestoreContextModule';
 
 import { config } from './firebase.config';
 

@@ -1,10 +1,62 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>register</ion-title>
+    <ion-title>Registro de usuario</ion-title>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
+  <ion-slides>
+    <ion-slide>
+      <h1>¡Hola!</h1>
+      <h2>¿Cómo te llamas?</h2>
+
+      <form [formGroup]="usernameForm">
+        <ion-item>
+          <ion-input type="text" placeholder="Nombre" formControlName="name"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input type="text" placeholder="Apellidos" formControlName="lastName"></ion-input>
+        </ion-item>
+      </form>
+
+    </ion-slide>
+    <ion-slide>
+      <h2>Ésta es la página 2</h2>
+      <button ion-button block (click)="goToLogin()">Acceder</button>
+    </ion-slide>
+    <ion-slide>
+      <h2>Y ésta la 3</h2>
+      <button ion-button block (click)="goToLogin()">Acceder</button>
+    </ion-slide>
+  </ion-slides>
+
+  <form [formGroup]="form" (ngSubmit)="">
+    <pre>{{ form?.value | json }}</pre>x
+    <ion-list>
+
+
+      <ion-item>
+        <ion-input type="email" placeholder="Correo electrónico" formControlName="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input type="tel" placeholder="Teléfono" formControlName="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input type="date" placeholder="Fecha de nacimiento" formControlName="birthDate"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Sexo</ion-label>
+        <ion-select formControlName="sex" interface="int">
+          <ion-option [value]="sex.FEMALE">Mujer</ion-option>
+          <ion-option [value]="sex.MALE">Hombre</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </form>
 
 </ion-content>
