@@ -4,7 +4,7 @@ import { ADD_USER_BIRTHDATE } from './regiser.actions.constants';
 export class AddUserBirthDateAction implements Action {
   readonly type: string = ADD_USER_BIRTHDATE;
 
-  constructor(private payload: string) {
+  constructor(public payload: Date) {
 
   }
 }
