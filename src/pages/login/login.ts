@@ -9,17 +9,10 @@ import { LoginCredentials } from '../../domain/login/LoginCredentials';
 import { LoginError } from '../../domain/login/LoginError';
 import { UserNotFoundError } from '../../domain/login/UserNotFoundError';
 import { Error } from '../../domain/shared/Error';
-import { ClearErrorAction } from '../../state-management/login/ClearErrorAction';
-import { LoginAction } from '../../state-management/login/LoginAction';
+import { ClearErrorAction } from '../../state-management/login/actions/ClearErrorAction';
+import { LoginAction } from '../../state-management/login/actions/LoginAction';
 import { LoginState } from '../../state-management/login/LoginState';
 import { RegisterPage } from '../register/register';
-
-/**
- * Generated class for the LoginPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @Component({
   selector: 'page-login',
@@ -46,7 +39,7 @@ export class LoginPage {
   }
 
   register() {
-    this.navCtrl.push(RegisterPage, {email: ''});
+    this.navCtrl.push(RegisterPage, { email: '' });
   }
 
   ionViewDidEnter() {
@@ -63,7 +56,7 @@ export class LoginPage {
     this.loadingSubscription = store.select(state => state.loading)
                                     .map(showLoading => {
                                       if (showLoading && !this.loading) {
-                                        this.loading = this.loadingCtrl.create({content: 'Iniciando sesión...'});
+                                        this.loading = this.loadingCtrl.create({ content: 'Iniciando sesión...' });
                                         this.loading.present();
                                       } else if (this.loading) {
                                         this.loading.dismiss();
@@ -118,7 +111,7 @@ export class LoginPage {
               text: 'Aceptar',
               handler: () => {
                 // this.store.dispatch(new RegisterNewUserAction(credentials));
-                this.navCtrl.push(RegisterPage, {email: credentials.email});
+                this.navCtrl.push(RegisterPage, { email: credentials.email });
               }
             }
           ]

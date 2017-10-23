@@ -6,11 +6,13 @@ import {
   ADD_USER_PASSWORD,
   ADD_USER_PHONENUMBER,
   ADD_USER_SEX
-} from './regiser.actions.constants';
-import { RegisterState } from './RegisterState';
-import { Action } from './register.actions';
+} from '../actions/regiser.actions.constants';
+import { RegisterState } from '../RegisterState';
+import { Action } from '../actions/register.actions';
 
 const initialState: RegisterState = {};
+
+export const feature: string = 'register';
 
 const updateUserProperty = (state: RegisterState, property: string, value: any): RegisterState => {
   const user = Object.assign({}, state.user, { [property]: value });

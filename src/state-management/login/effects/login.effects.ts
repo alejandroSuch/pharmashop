@@ -6,13 +6,13 @@ import 'rxjs/add/operator/catch';
 
 import 'rxjs/add/operator/mergeMap';
 import { Observable } from 'rxjs/Observable';
-import { LOGIN_SERVICE } from '../../app/InjectionTokens';
-import { LoginService } from '../../domain/login/LoginService';
-import { Action } from './login.actions';
+import { LOGIN_SERVICE } from '../../../app/InjectionTokens';
+import { LoginService } from '../../../domain/login/LoginService';
+import { Action } from '../actions/login.actions';
 
-import { LOGIN } from './login.actions.constants';
-import { LoginAction } from './LoginAction';
-import { LoginErrorAction } from './LoginErrorAction';
+import { LOGIN } from '../actions/login.actions.constants';
+import { LoginAction } from '../actions/LoginAction';
+import { LoginErrorAction } from '../actions/LoginErrorAction';
 
 @Injectable()
 export class LoginEffects {

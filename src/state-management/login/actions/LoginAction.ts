@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { LoginCredentials } from '../../domain/login/LoginCredentials';
+import { LoginCredentials } from '../../../domain/login/LoginCredentials';
 import { LOGIN } from './login.actions.constants';
 
 export class LoginAction implements Action {

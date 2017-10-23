@@ -3,13 +3,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { NavParams, Slides, ViewController } from 'ionic-angular';
 import { Sex } from '../../domain/shared/Sex';
-import { AddUserLastNameAction } from '../../state-management/register/AddUserLastNameAction';
-import { AddUserNameAction } from '../../state-management/register/AddUserNameAction';
+import { AddUserLastNameAction } from '../../state-management/register/actions/AddUserLastNameAction';
+import { AddUserNameAction } from '../../state-management/register/actions/AddUserNameAction';
 import { RegisterState, RegisterUser } from '../../state-management/register/RegisterState';
 import { RegisterFormValidators } from './form/RegisterFormValidators';
 
 const Steps = {
-  WHATS_YOUR_NAME: 0
+  WHATS_YOUR_NAME: 0,
+  WHATS_YOUR_BIRTHDATE: 1
 };
 
 @Component({
@@ -52,6 +53,7 @@ export class RegisterPage {
 
     this.store.dispatch(new AddUserNameAction(value.name));
     this.store.dispatch(new AddUserLastNameAction(value.lastName));
+    this.slides.slideTo(Steps.WHATS_YOUR_BIRTHDATE);
   }
 
   private initializeForms(email: any) {

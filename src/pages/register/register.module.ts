@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicPageModule } from 'ionic-angular';
+import { RegisterStateManagementModule } from '../../state-management/register/RegisterStateManagementModule';
 import { RegisterPage } from './register';
 
 @NgModule({
@@ -9,7 +10,8 @@ import { RegisterPage } from './register';
   ],
   imports: [
     IonicPageModule.forChild(RegisterPage),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RegisterStateManagementModule
   ]
 })
 export class RegisterPageModule {

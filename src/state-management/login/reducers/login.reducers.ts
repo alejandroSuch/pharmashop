@@ -1,7 +1,7 @@
-import { Action } from './login.actions';
-import { CLEAR_ERROR, LOGIN, LOGIN_ERROR, LOGIN_SUCCESS } from './login.actions.constants';
-import { LoginErrorAction } from './LoginErrorAction';
-import { LoginState } from './LoginState';
+import { Action } from '../actions/login.actions';
+import { CLEAR_ERROR, LOGIN, LOGIN_ERROR, LOGIN_SUCCESS } from '../actions/login.actions.constants';
+import { LoginErrorAction } from '../actions/LoginErrorAction';
+import { LoginState } from '../LoginState';
 
 const initialState: LoginState = {
   loading: false,
@@ -9,7 +9,7 @@ const initialState: LoginState = {
   userNotFound: false
 };
 
-export const loginFeature: string = 'login';
+export const feature: string = 'login';
 
 export function loginReducers(state: LoginState = initialState, action: Action): LoginState {
   switch (action.type) {
