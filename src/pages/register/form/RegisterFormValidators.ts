@@ -1,4 +1,4 @@
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
 
 import moment from 'moment';
 import { Sex } from '../../../domain/shared/Sex';
@@ -26,5 +26,35 @@ export class RegisterFormValidators {
     const isAdult: boolean = Math.abs(moment({ h: 0, m: 0, s: 0 }).diff(control.value)) > 18;
 
     return isAdult? null : { isAdult: true };
+  }
+
+  static passwordsMatch(theOtherControlName:string, isReverse:boolean): ValidatorFn {
+    return (control: AbstractControl): ValidationFnType => {
+      const theOtherControl:AbstractControl = control.root.get(theOtherControlName);
+
+      if(!theOtherControl) {
+        return null;
+      }
+
+      const theOtherValue:string = theOtherControl.value;
+      const isValid:boolean = control.value === theOtherValue;
+
+      if(isValid && !isReverse) {
+        return null;
+      }
+
+      if(isValid && isReverse) {
+        delete theOtherControl.errors['matches'];
+      }
+
+      if(!isValid && !isReverse) {
+        return { matches: true };
+      }
+
+      if(!isValid && isReverse) {
+        theOtherControl.setErrors({ matches: true });
+      }
+
+    };
   }
 }
