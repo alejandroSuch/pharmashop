@@ -1,14 +1,19 @@
-import { NgModule } from '@angular/core';
 import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
-import { LoginService } from '../../domain/login/LoginService';
-import { Login } from '../../domain/login/usecase/Login';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireModule } from 'angularfire2';
+import { config } from './firebase.config';
 import { FirebaseLoginService } from '../../firebase/login/FirebaseLoginService';
-
+import { Login } from '../../domain/login/usecase/Login';
 import { LOGIN_SERVICE, LOGIN_USE_CASE } from '../InjectionTokens';
+import { LoginService } from '../../domain/login/LoginService';
+import { NgModule } from '@angular/core';
 
 @NgModule({
   imports: [
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    AngularFireModule.initializeApp(config),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
   ],
   providers: [
     {
