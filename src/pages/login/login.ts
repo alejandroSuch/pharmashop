@@ -1,3 +1,4 @@
+import { loginFeature } from './../../state-management/login/reducers/login.reducers';
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AlertController, Loading, LoadingController, NavController } from 'ionic-angular';
@@ -22,7 +23,6 @@ export class LoginPage {
   private loading: Loading = null;
   private loadingSubscription: Subscription = null;
 
-  private alert;
   private alertSubscription: Subscription;
 
   private store: Store<LoginState>;
@@ -31,7 +31,7 @@ export class LoginPage {
               private alertCtrl: AlertController,
               private loadingCtrl: LoadingController,
               private navCtrl: NavController) {
-    this.store = this.appStore.select(state => <LoginState>state.login);
+    this.store = this.appStore.select(loginFeature);
   }
 
   login(email: string, password: string) {
