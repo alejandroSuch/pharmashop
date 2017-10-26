@@ -10,6 +10,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { LoginPageModule } from '../pages/login/login.module';
 import { MyApp } from './app.component';
 import { RegisterPage } from '../pages/register/register';
+import { RegisterPageModule } from './../pages/register/register.module';
 import { SlidesPage } from './../pages/slides/slides';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -20,8 +21,7 @@ import { StoreModule } from '@ngrx/store';
 @NgModule({
   declarations: [
     MyApp,
-    SlidesPage,
-    RegisterPage
+    SlidesPage
   ],
   imports: [
     BrowserModule,
@@ -38,7 +38,8 @@ import { StoreModule } from '@ngrx/store';
     AngularFireModule.initializeApp(config),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
-    LoginPageModule
+    LoginPageModule,
+    RegisterPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
