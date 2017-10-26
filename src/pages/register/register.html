@@ -6,12 +6,13 @@
 
 
 <ion-content padding>
-  <ion-slides centeredSlides="false" effect="fade" pager="true" paginationType="progress" spaceBetween="8">
+  <ion-slides effect="fade" pager="true" paginationType="progress" spaceBetween="8">
     <ion-slide>
       <h1>¡Hola!</h1>
       <h2>¿Cómo te llamas?</h2>
 
-      <form [formGroup]="usernameForm" (ngSubmit)="onUsernameSubmit(usernameForm)">
+      <ion-list>
+      <form [formGroup]="form.controls.usernameForm" (ngSubmit)="onUsernameSubmit(form.controls.usernameForm)">
         <ion-item>
           <ion-input type="text" placeholder="Nombre" formControlName="name"></ion-input>
         </ion-item>
@@ -20,14 +21,14 @@
           <ion-input type="text" placeholder="Apellidos" formControlName="lastName"></ion-input>
         </ion-item>
 
-        <button ion-button full type="submit" [disabled]="!usernameForm.valid">Siguiente</button>
+        <button ion-button full type="submit" [disabled]="!form.controls.usernameForm.valid">Siguiente</button>
       </form>
-
+    </ion-list>
     </ion-slide>
     <ion-slide>
       <h2>Eres...</h2>
 
-      <form [formGroup]="sexForm" (ngSubmit)="onSexSubmit(sexForm)">
+      <form [formGroup]="form.controls.sexForm" (ngSubmit)="onSexSubmit(form.controls.sexForm)">
         <ion-list radio-group formControlName="sex">
           <ion-item>
             <ion-label>Mujer</ion-label>
@@ -39,14 +40,14 @@
           </ion-item>
         </ion-list>
 
-        <button ion-button full type="submit" [disabled]="!sexForm.valid">Siguiente</button>
+        <button ion-button full type="submit" [disabled]="!form.controls.sexForm.valid">Siguiente</button>
         <button ion-button clear type="button" (click)="onSexBack()">Anterior</button>
       </form>
     </ion-slide>
 
     <ion-slide>
       <h2>¿Y tu fecha de nacimiento?</h2>
-      <form [formGroup]="birthDateForm" (ngSubmit)="onBirthDateSubmit(birthDateForm)">
+      <form [formGroup]="form.controls.birthDateForm" (ngSubmit)="onBirthDateSubmit(form.controls.birthDateForm)">
         <ion-item>
           <ion-datetime 
             placeholder="dd/mm/yyyy"
@@ -55,38 +56,38 @@
           ></ion-datetime>
         </ion-item>
 
-        <button ion-button full type="submit" [disabled]="!usernameForm.valid">Siguiente</button>
+        <button ion-button full type="submit" [disabled]="!form.controls.birthDateForm.valid">Siguiente</button>
         <button ion-button clear type="button" (click)="onBirthDateBack()">Anterior</button>
       </form>
     </ion-slide>
 
     <ion-slide>
       <h2>Tu teléfono es...</h2>
-      <form [formGroup]="phoneNumberForm" (ngSubmit)="onPhoneNumberSubmit(phoneNumberForm)">
+      <form [formGroup]="form.controls.phoneNumberForm" (ngSubmit)="onPhoneNumberSubmit(form.controls.phoneNumberForm)">
           <ion-item>
             <ion-input type="tel" placeholder="+34 123 456 789" formControlName="phoneNumber"></ion-input>
           </ion-item>
 
-        <button ion-button full type="submit" [disabled]="!usernameForm.valid">Siguiente</button>
+        <button ion-button full type="submit" [disabled]="!form.controls.phoneNumberForm.valid">Siguiente</button>
         <button ion-button clear type="button" (click)="onPhoneNumberBack()">Anterior</button>
       </form>
     </ion-slide>
 
     <ion-slide>
       <h2>Sólo nos queda saber tu dirección de email...</h2>
-      <form [formGroup]="emailForm" (ngSubmit)="onEmailSubmit(emailForm)">
+      <form [formGroup]="form.controls.emailForm" (ngSubmit)="onEmailSubmit(form.controls.emailForm)">
         <ion-item>
           <ion-input type="email" placeholder="info@behealthyandhappy.com" formControlName="email"></ion-input>
         </ion-item>
 
-        <button ion-button full type="submit" [disabled]="!usernameForm.valid">Siguiente</button>
+        <button ion-button full type="submit" [disabled]="!form.controls.emailForm.valid">Siguiente</button>
         <button ion-button clear type="button" (click)="onEmailBack()">Anterior</button>
       </form>
     </ion-slide>
 
     <ion-slide>
       <h2>...y tu contraseña</h2>
-      <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit(passwordForm)">
+      <form [formGroup]="form.controls.passwordForm" (ngSubmit)="onPasswordSubmit(form.controls.passwordForm)">
         <ion-item>
           <ion-input type="password" placeholder="Contraseña" formControlName="password"></ion-input>
         </ion-item>
@@ -95,7 +96,7 @@
           <ion-input type="password" placeholder="Repite contraseña" formControlName="repeatPassword"></ion-input>
         </ion-item>
 
-        <button ion-button full type="submit" [disabled]="!usernameForm.valid">Finalizar</button>
+        <button ion-button full type="submit" [disabled]="!form.controls.passwordForm.valid">Finalizar</button>
         <button ion-button clear type="button" (click)="onPasswordBack()">Anterior</button>
       </form>
     </ion-slide>

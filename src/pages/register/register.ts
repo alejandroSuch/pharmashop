@@ -29,13 +29,6 @@ enum Steps {
 export class RegisterPage {
   @ViewChild(Slides) slides: Slides;
 
-  usernameForm: FormGroup;
-  emailForm: FormGroup;
-  sexForm: FormGroup;
-  phoneNumberForm: FormGroup;
-  birthDateForm: FormGroup;
-  passwordForm: FormGroup;
-
   form: FormGroup;
   sex = Sex;
 
@@ -140,30 +133,32 @@ export class RegisterPage {
   }
 
   private initializeForms(email: any) {
-    this.usernameForm = this.fb.group({
-      name: [null, Validators.required],
-      lastName: [null, Validators.required]
-    });
-
-    this.emailForm = this.fb.group({
-      email: [email, Validators.email]
-    });
-
-    this.sexForm = this.fb.group({
-      sex: ['', [RegisterFormValidators.validSex, Validators.required]]
-    });
-
-    this.phoneNumberForm = this.fb.group({
-      phoneNumber: [null, [Validators.required, Validators.pattern(/^(\+\d{2}\s?)?(\d{9})$/)]]
-    });
-
-    this.birthDateForm = this.fb.group({
-      birthDate: [null, [Validators.required, RegisterFormValidators.isAdult]]
-    });
-
-    this.passwordForm = this.fb.group({
-      password: [null, [Validators.required, RegisterFormValidators.passwordsMatch('repeatPassword', true)]],
-      repeatPassword: [null, [Validators.required, RegisterFormValidators.passwordsMatch('password', false)]],
+    this.form = this.fb.group({
+      usernameForm: this.fb.group({
+        name: [null, Validators.required],
+        lastName: [null, Validators.required]
+      }),
+  
+      emailForm: this.fb.group({
+        email: [email, Validators.email]
+      }),
+  
+      sexForm: this.fb.group({
+        sex: ['', [RegisterFormValidators.validSex, Validators.required]]
+      }),
+  
+      phoneNumberForm: this.fb.group({
+        phoneNumber: [null, [Validators.required, Validators.pattern(/^(\+\d{2}\s?)?(\d{9})$/)]]
+      }),
+  
+      birthDateForm: this.fb.group({
+        birthDate: [null, [Validators.required, RegisterFormValidators.isAdult]]
+      }),
+  
+      passwordForm: this.fb.group({
+        password: [null, [Validators.required, RegisterFormValidators.passwordsMatch('repeatPassword', true)]],
+        repeatPassword: [null, [Validators.required, RegisterFormValidators.passwordsMatch('password', false)]],
+      })
     });
   }
 }
