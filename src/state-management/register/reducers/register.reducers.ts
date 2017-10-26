@@ -10,9 +10,7 @@ export function registerReducers(state: RegisterState = initialState, action: Ac
   switch (action.type) {
     case ADD_USER_INFO:
       const user = {  ...state.user, ...action.payload };
-      const result = { ...state, user };
-      console.log('result is', result);
-      return result;
+      return { ...state, user };
 
     default:
       return state;
