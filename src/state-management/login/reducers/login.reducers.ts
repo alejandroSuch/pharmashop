@@ -9,7 +9,7 @@ const initialState: LoginState = {
   userNotFound: false
 };
 
-export const feature: string = 'login';
+export const loginFeature: string = 'login';
 
 export function loginReducers(state: LoginState = initialState, action: Action): LoginState {
   switch (action.type) {

@@ -1,17 +1,12 @@
-import { AddUserPasswordAction } from './../../state-management/register/actions/AddUserPasswordAction';
-import { AddUserEmailAction } from './../../state-management/register/actions/AddUserEmailAction';
-import { AddUserPhoneNumberAction } from './../../state-management/register/actions/AddUserPhoneNumberAction';
-import { AddUserBirthDateAction } from './../../state-management/register/actions/AddUserBirthDateAction';
-import { AddUserSexAction } from './../../state-management/register/actions/AddUserSexAction';
+import { registerFeature } from './../../state-management/register/reducers/register.reducers';
+import { AddUserInfoAction } from './../../state-management/register/actions/AddUserInfoAction';
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { NavParams, Slides, ViewController } from 'ionic-angular';
-import { Sex } from '../../domain/shared/Sex';
-import { AddUserLastNameAction } from '../../state-management/register/actions/AddUserLastNameAction';
-import { AddUserNameAction } from '../../state-management/register/actions/AddUserNameAction';
-import { RegisterState, RegisterUser } from '../../state-management/register/RegisterState';
 import { RegisterFormValidators } from './form/RegisterFormValidators';
+import { RegisterState, RegisterUser } from '../../state-management/register/RegisterState';
+import { Sex } from '../../domain/shared/Sex';
+import { Store } from '@ngrx/store';
 
 enum Steps {
   WHATS_YOUR_NAME,
@@ -30,6 +25,7 @@ export class RegisterPage {
   @ViewChild(Slides) slides: Slides;
 
   form: FormGroup;
+
   sex = Sex;
 
   private store: Store<RegisterState>;
@@ -37,17 +33,16 @@ export class RegisterPage {
   constructor(private navParams: NavParams,
               private fb: FormBuilder,
               private appStore: Store<any>,
-              viewCtrl: ViewController) {
+              private viewCtrl: ViewController) {
 
-    viewCtrl.setBackButtonText('Cancelar');
-
-    this.store = this.appStore.select(state => <RegisterState>state.register);
+    this.store = this.appStore.select(registerFeature);
 
     const email = this.navParams.get('email') || null;
     this.initializeForms(email);
   }
 
   ngAfterViewInit() {
+    this.viewCtrl.setBackButtonText('Cerrar');
     this.slides.lockSwipes(true); 
   }
 
@@ -57,23 +52,21 @@ export class RegisterPage {
     this.slides.lockSwipes(true);
   }
 
-  onUsernameSubmit({ value, valid }: { value: RegisterUser, valid: boolean }) {
+  onUsernameSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserNameAction(value.name));
-    this.store.dispatch(new AddUserLastNameAction(value.lastName));
+    this.store.dispatch(new AddUserInfoAction({name: value.name, lastName: value.lastName }));
     this.slideTo(Steps.WHATS_YOUR_SEX);
   }
 
-  onSexSubmit({ value, valid }: { value: RegisterUser, valid: boolean }) {
-    debugger;
+  onSexSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserSexAction(value.sex));
+    this.store.dispatch(new AddUserInfoAction({sex: value.sex}));
     this.slideTo(Steps.WHATS_YOUR_BIRTHDATE);
   }
 
@@ -81,12 +74,12 @@ export class RegisterPage {
     this.slideTo(Steps.WHATS_YOUR_NAME);
   }
 
-  onBirthDateSubmit({ value, valid }: { value: RegisterUser, valid: boolean }) {
+  onBirthDateSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserBirthDateAction(value.birthDate));
+    this.store.dispatch(new AddUserInfoAction({birthDate: value.birthDate}));
     this.slideTo(Steps.WHATS_YOUR_PHONE_NUMBER);
   }
 
@@ -94,12 +87,12 @@ export class RegisterPage {
     this.slideTo(Steps.WHATS_YOUR_SEX);
   }
 
-  onPhoneNumberSubmit({ value, valid }: { value: RegisterUser, valid: boolean }) {
+  onPhoneNumberSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserPhoneNumberAction(value.phoneNumber));
+    this.store.dispatch(new AddUserInfoAction({phoneNumber: value.phoneNumber}));
     this.slideTo(Steps.WHATS_YOUR_EMAIL);
   }
 
@@ -107,12 +100,12 @@ export class RegisterPage {
     this.slideTo(Steps.WHATS_YOUR_BIRTHDATE);
   }
 
-  onEmailSubmit({ value, valid }: { value: RegisterUser, valid: boolean }) {
+  onEmailSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserEmailAction(value.phoneNumber));
+    this.store.dispatch(new AddUserInfoAction({email: value.email}));
     this.slideTo(Steps.WHATS_YOUR_PASSWORD);
   }
 
@@ -120,12 +113,16 @@ export class RegisterPage {
     this.slideTo(Steps.WHATS_YOUR_PHONE_NUMBER);
   }
 
-  onPasswordSubmit({ value, valid }: { value: RegisterUser, valid: boolean }) {
+  onPasswordSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserPasswordAction(value.phoneNumber));
+    this.store.dispatch(new AddUserInfoAction({password: value.password}));
+
+    if(this.form.valid) {
+      // TODO: send event to save user data
+    }
   }
 
   onPasswordBack() {
