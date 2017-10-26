@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
-import { feature, registerReducers } from './reducers/register.reducers';
+import { registerFeature, registerReducers } from './reducers/register.reducers';
 
 @NgModule({
   imports: [
-    StoreModule.forFeature(feature, registerReducers)
+    StoreModule.forFeature(registerFeature, registerReducers)
   ]
 })
 export class RegisterStateManagementModule {
