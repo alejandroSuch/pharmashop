@@ -30,7 +30,11 @@ export class RegisterFormValidators {
 
   static passwordsMatch(theOtherControlName:string, isReverse:boolean): ValidatorFn {
     return (control: AbstractControl): ValidationFnType => {
-      const theOtherControl:AbstractControl = control.root.get(theOtherControlName);
+      if(!control || !control.parent) {
+        return null;
+      }
+
+      const theOtherControl:AbstractControl = control.parent.get(theOtherControlName);
 
       if(!theOtherControl) {
         return null;
