@@ -1,12 +1,14 @@
-import { registerFeature } from './../../state-management/register/reducers/register.reducers';
-import { AddUserInfoAction } from './../../state-management/register/actions/AddUserInfoAction';
-import { Component, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavParams, Slides, ViewController } from 'ionic-angular';
-import { RegisterFormValidators } from './form/RegisterFormValidators';
-import { RegisterState, RegisterUser } from '../../state-management/register/RegisterState';
-import { Sex } from '../../domain/shared/Sex';
 import { Store } from '@ngrx/store';
+import { NavParams, Slides, ViewController } from 'ionic-angular';
+import { User } from '../../domain/auth/model/User';
+import { Sex } from '../../domain/shared/Sex';
+import { RegisterUserAction } from '../../state-management/register/actions/RegisterUserAction';
+import { RegisterState } from '../../state-management/register/RegisterState';
+import { AddUserInfoAction } from './../../state-management/register/actions/AddUserInfoAction';
+import { RegisterFormValidators } from './form/RegisterFormValidators';
+import { REGISTER_STORE } from '../../state-management/register/feature';
 
 enum Steps {
   WHATS_YOUR_NAME,
@@ -15,7 +17,8 @@ enum Steps {
   WHATS_YOUR_PHONE_NUMBER,
   WHATS_YOUR_EMAIL,
   WHATS_YOUR_PASSWORD
-};
+}
+
 
 @Component({
   selector: 'page-register',
@@ -28,14 +31,10 @@ export class RegisterPage {
 
   sex = Sex;
 
-  private store: Store<RegisterState>;
-
   constructor(private navParams: NavParams,
               private fb: FormBuilder,
-              private appStore: Store<any>,
-              private viewCtrl: ViewController) {
-
-    this.store = this.appStore.select(registerFeature);
+              private viewCtrl: ViewController,
+              @Inject(REGISTER_STORE) private store: Store<RegisterState>) {
 
     const email = this.navParams.get('email') || null;
     this.initializeForms(email);
@@ -43,7 +42,7 @@ export class RegisterPage {
 
   ngAfterViewInit() {
     this.viewCtrl.setBackButtonText('Cerrar');
-    this.slides.lockSwipes(true); 
+    this.slides.lockSwipes(true);
   }
 
   slideTo(index) {
@@ -52,21 +51,21 @@ export class RegisterPage {
     this.slides.lockSwipes(true);
   }
 
-  onUsernameSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
+  onUsernameSubmit({ value, valid }: { value: Partial<User>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserInfoAction({name: value.name, lastName: value.lastName }));
+    this.store.dispatch(new AddUserInfoAction(<Partial<User>>{ name: value.name, lastName: value.lastName }));
     this.slideTo(Steps.WHATS_YOUR_SEX);
   }
 
-  onSexSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
+  onSexSubmit({ value, valid }: { value: Partial<User>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserInfoAction({sex: value.sex}));
+    this.store.dispatch(new AddUserInfoAction(<Partial<User>>{ sex: value.sex }));
     this.slideTo(Steps.WHATS_YOUR_BIRTHDATE);
   }
 
@@ -74,12 +73,12 @@ export class RegisterPage {
     this.slideTo(Steps.WHATS_YOUR_NAME);
   }
 
-  onBirthDateSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
+  onBirthDateSubmit({ value, valid }: { value: Partial<User>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserInfoAction({birthDate: value.birthDate}));
+    this.store.dispatch(new AddUserInfoAction(<Partial<User>>{ birthDate: value.birthDate }));
     this.slideTo(Steps.WHATS_YOUR_PHONE_NUMBER);
   }
 
@@ -87,12 +86,12 @@ export class RegisterPage {
     this.slideTo(Steps.WHATS_YOUR_SEX);
   }
 
-  onPhoneNumberSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
+  onPhoneNumberSubmit({ value, valid }: { value: Partial<User>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserInfoAction({phoneNumber: value.phoneNumber}));
+    this.store.dispatch(new AddUserInfoAction(<Partial<User>>{ phoneNumber: value.phoneNumber }));
     this.slideTo(Steps.WHATS_YOUR_EMAIL);
   }
 
@@ -100,12 +99,12 @@ export class RegisterPage {
     this.slideTo(Steps.WHATS_YOUR_BIRTHDATE);
   }
 
-  onEmailSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
+  onEmailSubmit({ value, valid }: { value: Partial<User>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserInfoAction({email: value.email}));
+    this.store.dispatch(new AddUserInfoAction(<Partial<User>>{ email: value.email }));
     this.slideTo(Steps.WHATS_YOUR_PASSWORD);
   }
 
@@ -113,15 +112,15 @@ export class RegisterPage {
     this.slideTo(Steps.WHATS_YOUR_PHONE_NUMBER);
   }
 
-  onPasswordSubmit({ value, valid }: { value: Partial<RegisterUser>, valid: boolean }) {
+  onPasswordSubmit({ value, valid }: { value: Partial<User>, valid: boolean }) {
     if (!valid) {
       return;
     }
 
-    this.store.dispatch(new AddUserInfoAction({password: value.password}));
+    this.store.dispatch(new AddUserInfoAction(<Partial<User>>{ password: value.password }));
 
-    if(this.form.valid) {
-      // TODO: send event to save user data
+    if (this.form.valid) {
+      this.store.dispatch(new RegisterUserAction());
     }
   }
 
@@ -135,26 +134,26 @@ export class RegisterPage {
         name: [null, Validators.required],
         lastName: [null, Validators.required]
       }),
-  
+
       emailForm: this.fb.group({
         email: [email, Validators.email]
       }),
-  
+
       sexForm: this.fb.group({
         sex: ['', [RegisterFormValidators.validSex, Validators.required]]
       }),
-  
+
       phoneNumberForm: this.fb.group({
         phoneNumber: [null, [Validators.required, Validators.pattern(/^(\+\d{2}\s?)?(\d{9})$/)]]
       }),
-  
+
       birthDateForm: this.fb.group({
         birthDate: [null, [Validators.required, RegisterFormValidators.isAdult]]
       }),
-  
+
       passwordForm: this.fb.group({
         password: [null, [Validators.required, RegisterFormValidators.passwordsMatch('repeatPassword', true)]],
-        repeatPassword: [null, [Validators.required, RegisterFormValidators.passwordsMatch('password', false)]],
+        repeatPassword: [null, [Validators.required, RegisterFormValidators.passwordsMatch('password', false)]]
       })
     });
   }

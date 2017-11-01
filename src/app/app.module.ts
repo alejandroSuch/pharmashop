@@ -1,15 +1,16 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { EffectsModule } from '@ngrx/effects';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { FirestoreContextModule } from './context/FirestoreContextModule';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { LoginPageModule } from '../pages/login/login.module';
-import { MyApp } from './app.component';
-import { RegisterPageModule } from './../pages/register/register.module';
-import { SlidesPage } from './../pages/slides/slides';
+import { BrowserModule } from '@angular/platform-browser';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { LoginPageModule } from '../pages/login/login.module';
+import { RegisterPageModule } from './../pages/register/register.module';
+import { SlidesPage } from './../pages/slides/slides';
+import { MyApp } from './app.component';
+import { ApplicationContextModule } from './context/ApplicationContextModule';
+import { FirestoreContextModule } from './context/FirestoreContextModule';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { StoreModule } from '@ngrx/store';
       }
     }),
     FirestoreContextModule,
+    ApplicationContextModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
     LoginPageModule,
@@ -39,7 +41,7 @@ import { StoreModule } from '@ngrx/store';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })
 export class AppModule {

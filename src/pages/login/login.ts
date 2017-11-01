@@ -1,4 +1,3 @@
-import { loginFeature } from './../../state-management/login/reducers/login.reducers';
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AlertController, Loading, LoadingController, NavController } from 'ionic-angular';
@@ -6,14 +5,15 @@ import 'rxjs/add/operator/filter';
 
 import 'rxjs/add/operator/map';
 import { Subscription } from 'rxjs/Subscription';
-import { LoginCredentials } from '../../domain/login/LoginCredentials';
-import { LoginError } from '../../domain/login/LoginError';
-import { UserNotFoundError } from '../../domain/login/UserNotFoundError';
-import { Error } from '../../domain/shared/Error';
+import { LoginCredentials } from '../../domain/auth/model/LoginCredentials';
+import { LoginError } from '../../domain/auth/model/LoginError';
+import { UserNotFoundError } from '../../domain/auth/model/UserNotFoundError';
+import { DomainError } from '../../domain/shared/Error';
 import { ClearErrorAction } from '../../state-management/login/actions/ClearErrorAction';
 import { LoginAction } from '../../state-management/login/actions/LoginAction';
 import { LoginState } from '../../state-management/login/LoginState';
 import { RegisterPage } from '../register/register';
+import { loginFeature } from './../../state-management/login/reducers/login.reducers';
 
 @Component({
   selector: 'page-login',
@@ -74,7 +74,7 @@ export class LoginPage {
       .subscribe()
   }
 
-  private onError(error: Error) {
+  private onError(error: DomainError) {
     if (error instanceof LoginError) {
       this.onGenericError(error);
     }

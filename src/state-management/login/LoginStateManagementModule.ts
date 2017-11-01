@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { LoginEffects } from './effects/login.effects';
+import { LoginEffects } from './effects/LoginEffects';
 import { loginFeature, loginReducers } from './reducers/login.reducers';
 
 @NgModule({

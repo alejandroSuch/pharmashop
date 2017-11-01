@@ -1,6 +1,8 @@
 import { InjectionToken } from '@angular/core';
-import { LoginService } from '../domain/login/LoginService';
-import { Login } from '../domain/login/usecase/Login';
+import { AuthService } from '../domain/auth/service/AuthService';
+import { Login } from '../domain/auth/command/Login';
 
-export const LOGIN_SERVICE = new InjectionToken<LoginService>('LoginService');
-export const LOGIN_USE_CASE = new InjectionToken<Login>('LoginUseCase');
+export const AUTH_SERVICE = new InjectionToken<AuthService>('AuthService');
+export const LOGIN_COMMAND = new InjectionToken<Login>('LoginUseCase');
+export const USER_REPOSITORY = new InjectionToken<Login>('UserRepository');
+export const REGISTER_USER_COMMAND = new InjectionToken<Login>('RegisterUser');

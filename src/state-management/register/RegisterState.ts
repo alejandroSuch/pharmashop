@@ -1,17 +1,7 @@
-import { Error } from '../../domain/shared/Error';
-import { Sex } from '../../domain/shared/Sex';
+import { User } from '../../domain/auth/model/User';
+import { DomainError } from '../../domain/shared/Error';
 
 export interface RegisterState {
-  user?: RegisterUser;
-  error?: Error;
-}
-
-export interface RegisterUser {
-  name: string;
-  lastName: string;
-  sex: Sex;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  birthDate: Date;
+  user?: User;
+  error?: DomainError;
 }
