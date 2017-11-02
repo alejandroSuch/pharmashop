@@ -1,20 +1,20 @@
 import { AngularFireAuth } from 'angularfire2/auth';
-import { User as FirebaseUser } from 'firebase';
-
-import 'rxjs/add/observable/fromPromise';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/mergeMap';
-import { Observable } from 'rxjs/Observable';
-import { LoginCredentials } from '../../domain/auth/model/LoginCredentials';
-import { LoginError } from '../../domain/auth/model/LoginError';
-import { User } from '../../domain/auth/model/User';
-import { UserNotFoundError } from '../../domain/auth/model/UserNotFoundError';
-import { UserRepository } from '../../domain/auth/repository/UserRepository';
 import { AuthService } from '../../domain/auth/service/AuthService';
-
 import { FirebaseLoginError } from './FirebaseLoginError';
 import { FirebaseLoginErrorCodes } from './FirebaseLoginErrorCodes';
+import { LoginCredentials } from '../../domain/auth/model/LoginCredentials';
+import { LoginError } from '../../domain/auth/model/LoginError';
+import { Observable } from 'rxjs/Observable';
+import { User } from '../../domain/auth/model/User';
+import { User as FirebaseUser } from 'firebase';
+import { UserNotFoundError } from '../../domain/auth/model/UserNotFoundError';
+import { UserRepository } from '../../domain/auth/repository/UserRepository';
 
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/operator/mergeMap';
 
 export class FirebaseAuthService implements AuthService {
   constructor(private afAuth: AngularFireAuth, private userRepository: UserRepository) {
@@ -22,26 +22,43 @@ export class FirebaseAuthService implements AuthService {
   }
 
   login(credentials: LoginCredentials): Observable<User | Error> {
+    debugger;
     return Observable
       .fromPromise(
         this.afAuth
             .auth
             .signInWithEmailAndPassword(credentials.email, credentials.password)
       )
-      .map(() => this.afAuth.auth.currentUser.uid)
-      .mergeMap((uid: string) => this.userRepository.findById(uid))
+      .map(() => {
+        debugger;
+        return this.afAuth.auth.currentUser.uid
+      })
+      .mergeMap((uid: string) => {
+      debugger;
+        return this.userRepository.findById(uid);
+      })
+      .map((it:any) => {
+        debugger;
+        return it;
+      })
       .catch(error => FirebaseAuthService.onFirebaseLoginError(error, credentials));
   }
 
   register(user: User): Observable<User | Error> {
-    const registrationPromise: Promise<FirebaseUser> = this.afAuth.auth.createUserWithEmailAndPassword(user.email, user.password);
+    debugger;
 
     return Observable
-      .fromPromise(registrationPromise)
-      .map((registeredUser: FirebaseUser) => (<User>{ ...user, id: registeredUser.uid }))
-      .mergeMap((userToPersist: User) => this.userRepository.save(userToPersist))
+      .fromPromise(this.afAuth.auth.createUserWithEmailAndPassword(user.email, user.password))
+      .mergeMap((firebaseUser:FirebaseUser) => {
+        debugger;
+        return this.userRepository.save(<User>{ ...user, id: firebaseUser.uid });
+      })
       .map(() => this.afAuth.auth.currentUser.uid)
-      .mergeMap((uid: string) => this.userRepository.findById(uid));
+      .mergeMap((uid: string) => this.userRepository.findById(uid))
+      .catch(() => {
+        debugger;
+        return Observable.throw('mierda');
+      });
   }
 
   private static onFirebaseLoginError(error: FirebaseLoginError, credentials: LoginCredentials): Observable<Error> {

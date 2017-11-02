@@ -7,7 +7,7 @@ export class RegisterUser {
   constructor(private authService: AuthService) {
   }
 
-  register(user: User): Observable<User|Error> {
+  execute(user: User): Observable<User|Error> {
     return this.authService.register(user);
   }
 }
